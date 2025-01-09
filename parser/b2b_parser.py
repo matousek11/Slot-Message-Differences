@@ -1,6 +1,7 @@
 from datetime import datetime
 from .parser import Parser
-from slot_messages_difference.models import SlotMessage
+from models.flight import Flight
+from models.slot_message import SlotMessage
 
 class B2BParser(Parser):
     def __init__(self, relative_filepath):

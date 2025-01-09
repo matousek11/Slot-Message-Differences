@@ -37,24 +37,29 @@ class AFTNParser(Parser):
 
     def parse_slot_messages(self, flights):
         with open(self.aftn_relative_path, 'r') as file:
-            message = self.get_one_message(file)
-            if message:
-                print(self.get_slot_message(message))
-                
+            while True:
+                message = self.get_one_message(file)
+                print(message)
+                if message is None:
+                    break
+                result = self.get_slot_message(message)
+                if result is not None:
+                    print(result[0])
+                    print(result[1].to_string())
+
                 
     def get_one_message(self, file):
-        numberOfEmptyLines = 0
+        number_of_empty_lines = 0
         message = []
         for line in file:
             if line.isspace():
-                numberOfEmptyLines = numberOfEmptyLines + 1
-                continue;
-            elif numberOfEmptyLines > 1:
+                number_of_empty_lines = number_of_empty_lines + 1
+                continue
+            if number_of_empty_lines > 1:
                 return message
 
-            print(message)
             message.append(line)
-            numberOfEmptyLines = 0
+            number_of_empty_lines = 0
 
     def get_slot_message(self, message):
         result = [None, None, None]
@@ -62,12 +67,12 @@ class AFTNParser(Parser):
             if '-IFPLID' in line:
                 result[0] = line.split(' ')[1]
             if 'Subject: ' in line:
-                startIndex = line.find('Subject: ') + len('Subject: ') - 3
+                startIndex = line.find('Subject: ') + len('Subject: ')
                 result[1] = line[startIndex:startIndex + 3]
             if 'At: ' in line:
-                startIndex = line.find('At: ') + len('Subject: ')  - 3
-                time = line[startIndex:startIndex + 21]
-                result[2] = datetime.strptime(time, '%y-%m-%d %H:%M:%S.%f').timestamp()
+                startIndex = line.find('At: ') + len('At: ')
+                time = line[startIndex:startIndex + 23]
+                result[2] = datetime.strptime(time, '%Y-%m-%d %H:%M:%S.%f').timestamp()
 
         if result[0] and result[1] and result[2]:
             return [result[0], SlotMessage(result[2], result[1])]

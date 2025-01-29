@@ -1,8 +1,8 @@
 from typing import Dict
 
-from models import Flight
-from parser.b2b_parser import B2BParser
-from parser.aftn_parser import AFTNParser
+from common.models import Flight
+from common.parser.b2b_parser import B2BParser
+from common.parser.aftn_parser import AFTNParser
 
 class SlotMessages:
     def __init__(self, b2b_relative_path: str, aftn_relative_path: str):
@@ -23,3 +23,6 @@ class SlotMessages:
             print("######")
             print(flight.print_all_slot_messages())
             print()
+
+    def get_flights(self) -> Dict[str, Flight]:
+        return self.flights

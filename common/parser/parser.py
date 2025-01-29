@@ -1,6 +1,6 @@
 from typing import Dict
 
-from models import Flight, SlotMessage
+from common.models import Flight, SlotMessage
 
 
 class Parser:
@@ -21,5 +21,5 @@ class Parser:
             flight = flights.get(ifplid)
             flight.add_aftn_slot(slot_message) if classname is aftn_classname else flight.add_b2b_slot(slot_message)
         else:
-            flights[ifplid] = Flight([], [slot_message]) if classname is aftn_classname else Flight([slot_message], [])
+            flights[ifplid] = Flight(ifplid, [], [slot_message]) if classname is aftn_classname else Flight([slot_message], [])
         

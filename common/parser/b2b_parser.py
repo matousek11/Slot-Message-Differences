@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Dict, List
 
 from .parser import Parser
-from models.flight import Flight
-from models.slot_message import SlotMessage
+from common.models.flight import Flight
+from common.models.slot_message import SlotMessage
 
 class B2BParser(Parser):
     def __init__(self, relative_filepath: str):

@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import List, TextIO, Dict
 
 from .parser import Parser
-from models.flight import Flight
-from models.slot_message import SlotMessage
+from common.models.flight import Flight
+from common.models.slot_message import SlotMessage
 
 #At: 2024-08-17 00:00:05.008       INFO       Process: afp(15598036/26542530)       In: src/aftn_comm_mod.c/acm_recvGetOldestMsgFromDb()/1727       Subject: #ACM(OTHER)
 #AFP process calls ``aftndb'' and receive following AFTN message:

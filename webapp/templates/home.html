@@ -82,12 +82,20 @@
     <h1>Slot messages difference between B2B and AFTN</h1>
     <div class="container">
         <h2>Differences</h2>
+        <p>Total number of flights: <span>{{ total_number }}</span></p>
+        <p>Number of flights with both AFTN and B2B messages: <span>{{ number }}</span></p>
+        <p>Average number of messages per flight. <b>AFTN:</b> <span>{{ average_num_of_messages.aftn_messages_number|floatformat:3 }}</span> <b>B2B:</b> <span>{{ average_num_of_messages.b2b_messages_number|floatformat:3 }}</span></p>
+        <p>Number of detection failures: <span>{{ number_of_detection_failures }}</span></p>
     </div>
     <div class="container">
         <h2>Flights</h2>
         {% for key, flight in flights.items %}
             <div class="flight-card">
-                <h4>Flight: {{ key }}</h4>
+                <h4>Flight: {{ key }}
+                    {% if flight.detection_failure == True %}
+                        <span>Failed to detect slots correctly</span>
+                    {% endif %}
+                </h4>
 
                 <p class="section-title">AFTN Slot Messages</p>
                 <ul>

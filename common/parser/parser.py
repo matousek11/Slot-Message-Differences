@@ -17,9 +17,9 @@ class Parser:
         """
         classname = self.__class__.__name__
         aftn_classname = 'AFTNParser'
+        ifplid = ifplid.strip()
         if flights.get(ifplid) is not None:
             flight = flights.get(ifplid)
             flight.add_aftn_slot(slot_message) if classname is aftn_classname else flight.add_b2b_slot(slot_message)
         else:
-            flights[ifplid] = Flight(ifplid, [], [slot_message]) if classname is aftn_classname else Flight([slot_message], [])
-        
+            flights[ifplid] = Flight(ifplid, [], [slot_message]) if classname is aftn_classname else Flight(ifplid, [slot_message], [])

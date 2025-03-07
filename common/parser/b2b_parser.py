@@ -6,19 +6,21 @@ from common.models.flight import Flight
 from common.models.slot_message import SlotMessage
 
 class B2BParser(Parser):
-    def __init__(self, relative_filepath: str):
-        self.b2b_relative_path = relative_filepath
+    def __init__(self, relative_filepaths: List[str]):
+        self.b2b_relative_paths = relative_filepaths
 
     def parse_slot_messages(self, flights: Dict[str, Flight]|Dict) -> None:
         """
         Parse B2B messages file into separate B2B slot message
         """
-        with open(self.b2b_relative_path, 'r') as file:
-            for line in file:
-                if line.isspace() or '###' in line:
-                    continue
-                parsed_slot_message_data = self.parse_b2b_slot_message(line)
-                self.save_slot_message_to_flight(parsed_slot_message_data[0], parsed_slot_message_data[1], flights)
+        for b2b_file_path in self.b2b_relative_paths:
+            with open(b2b_file_path, 'r') as file:
+                for line in file:
+                    line = line.strip()
+                    if line.isspace() or not line or '###' in line:
+                        continue
+                    parsed_slot_message_data = self.parse_b2b_slot_message(line)
+                    self.save_slot_message_to_flight(parsed_slot_message_data[0], parsed_slot_message_data[1], flights)
 
     def parse_b2b_slot_message(self, b2b_slot_message: str) -> List[str|SlotMessage]:
         """

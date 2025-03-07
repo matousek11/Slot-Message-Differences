@@ -34,25 +34,26 @@ from common.models.slot_message import SlotMessage
 # wanted ipflid, message type, timestamp
 
 class AFTNParser(Parser):
-    def __init__(self, relative_filepath: str):
-        self.aftn_relative_path = relative_filepath
+    def __init__(self, relative_filepaths: List[str]):
+        self.aftn_relative_paths = relative_filepaths
 
     def parse_slot_messages(self, flights: Dict[str, Flight]|Dict) -> None:
         """
         Parse AFTN messages file into separate AFTN slot message
         """
-        with open(self.aftn_relative_path, 'r') as file:
-            all_lines = file.readlines()
-            last_line_index = len(all_lines) - 1
-            last_line = all_lines[last_line_index]
-            file.seek(0)  # reset pointer to start
-            while True:
-                message = self.parse_aftn_slot_message(file, last_line)
-                if message is None:
-                    break
-                result = self.get_slot_message(message)
-                if result is not None:
-                    self.save_slot_message_to_flight(result[0], result[1], flights)
+        for aftn_relative_path in self.aftn_relative_paths:
+            with open(aftn_relative_path, 'r') as file:
+                all_lines = file.readlines()
+                last_line_index = len(all_lines) - 1
+                last_line = all_lines[last_line_index]
+                file.seek(0)  # reset pointer to start
+                while True:
+                    message = self.parse_aftn_slot_message(file, last_line)
+                    if message is None:
+                        break
+                    result = self.get_slot_message(message)
+                    if result is not None:
+                        self.save_slot_message_to_flight(result[0], result[1], flights)
 
     def parse_aftn_slot_message(self, file: TextIO, last_line: str) -> List[str]|None:
         """

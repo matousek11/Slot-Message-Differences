@@ -1,0 +1,8 @@
+<p class="section-title">{{ header}}</p>
+<ul>
+    {% for slot in slots %}
+        <li class="{{ slot.message_type|lower }}">{{ slot.to_string }}</li>
+    {% empty %}
+        <li class="empty-message">{{ empty_message }}</li>
+    {% endfor %}
+</ul>

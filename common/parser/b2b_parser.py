@@ -32,7 +32,7 @@ class B2BParser(Parser):
         b2b_slot_message = b2b_slot_message.replace("#", "")
         b2b_slot_message = b2b_slot_message.strip()
         b2b_slot_message = b2b_slot_message.split(" : ")
-        slot_created_timestamp = datetime.strptime(b2b_slot_message[0], '%Y-%m-%d %H:%M:%S %f').timestamp()
-        slot = SlotMessage(slot_created_timestamp, b2b_slot_message[2])
+        slot_sent_timestamp = datetime.strptime(b2b_slot_message[0], '%Y-%m-%d %H:%M:%S %f').timestamp()
+        slot = SlotMessage(slot_sent_timestamp, b2b_slot_message[2])
 
         return [b2b_slot_message[1], slot]

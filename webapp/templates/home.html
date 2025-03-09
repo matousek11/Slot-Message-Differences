@@ -16,8 +16,6 @@
 
         h1 {
             text-align: center;
-            color: #003366;
-            margin-bottom: 20px;
         }
 
         /* Main Container */
@@ -25,9 +23,15 @@
             max-width: 900px;
             margin: 0 auto 10px auto;
             background: #f8f9fa; /* Light gray */
-            padding: 20px;
+            padding: 20px 20px 12px;
             border-radius: 15px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1, h2, h3 {
+            color: #003366;
+            margin-top: 5px;
+            margin-bottom: 20px;
         }
 
         /* Flight Cards */
@@ -36,22 +40,39 @@
             margin: 15px 0;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid #0056b3; /* Accent border for separation */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid black; /* Accent border for separation */
         }
 
-        h4 {
-            color: #0056b3;
-            margin-bottom: 10px;
+        .flight-card-header {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
+        .flight-card-header h4 {
+            color: #0056b3;
+            font-size: 26px;
+            margin: 0 10px 0 0;
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+
+        .red { color: #9e1a1a; background: #f7d2d2 }
+        .blue { color: #0056b3; background: #dff0ff }
 
         /* Lists */
-        ul {
+        .flight-card ul {
             list-style-type: none;
             padding: 0;
         }
 
-        li {
+        .flight-card li {
             background: #dff0ff;
             margin: 5px 0;
             padding: 10px;
@@ -76,52 +97,95 @@
             font-style: italic;
             text-align: center;
         }
+
+        /* Legend Styling */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .legend-item ul {
+            list-style-type: circle;
+            margin-top: 0;
+            margin-left: 10px;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* Color Codes for Slot Types */
+        .sam { background: #d4f5d1 !important; border-color: #007c3f !important; }  /* Green */
+        .srm { background: #dff0ff !important; border-color: #0056b3 !important; }  /* Blue */
+        .slc { background: #f7d2d2 !important; border-color: #9e1a1a !important; }  /* Red */
+        .fls { background: #fff5b8 !important; border-color: #c28b00 !important; }  /* Yellow */
+        .des { background: #b3f2f9 !important; border-color: #00a3b3 !important; }  /* Cyan */
+
+        /* Summary Styling */
+        details {
+            background-color: #ffffff;
+            border-radius: 5px;
+        }
+
+        details[open] {
+            padding-bottom: 5px;
+        }
+
+        .legend-details-container {
+            margin-left: 23px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        details pre {
+            display: block;
+            overflow-x: auto;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            background: #1e1e1e;
+            color: #e5c7c7;
+        }
+
+        details pre span {
+            color: #708090FF;
+        }
+
+        summary {
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        details[open] summary {
+            margin-bottom: 5px;
+        }
+
+        summary:hover {
+            background: #e0e0e0;
+        }
     </style>
 </head>
 <body>
     <h1>Slot messages difference between B2B and AFTN</h1>
     <div class="container">
-        <h2>Differences</h2>
-        <p>Total number of flights: <span>{{ total_number }}</span></p>
-        <p>Number of flights with both AFTN and B2B messages: <span>{{ number }}</span></p>
-        <p>Average number of messages per flight. <b>AFTN:</b> <span>{{ average_num_of_messages.aftn_messages_number|floatformat:3 }}</span> <b>B2B:</b> <span>{{ average_num_of_messages.b2b_messages_number|floatformat:3 }}</span></p>
-        <p>Number of detection failures: <span>{{ number_of_detection_failures }}</span></p>
+        <h2>Purpose of application</h2>
+        <p>
+            Application parse slot messages from text files from two different sources. First source is AFTN (Aeronautical Fixed Telecommunication Network),
+            second source is generated by application that observe changes in flight parameters of flights in B2B and based on that infer slot messages.
+            Goal is to compare how goodly or badly detection based on parameters change work compared to AFTN messages.
+        </p>
     </div>
-    <div class="container">
-        <h2>Flights</h2>
-        {% for key, flight in flights.items %}
-            <div class="flight-card">
-                <h4>Flight: {{ key }}
-                    {% if flight.detection_failure == True %}
-                        <span>Failed to detect slots correctly</span>
-                    {% endif %}
-                </h4>
-
-                <p class="section-title">AFTN Slot Messages</p>
-                <ul>
-                    {% with aftn_messages=flight.get_aftn_messages %}
-                        {% for aftn_message in aftn_messages %}
-                            <li>{{ aftn_message.to_string }}</li>
-                        {% empty %}
-                            <li class="empty-message">No AFTN messages</li>
-                        {% endfor %}
-                    {% endwith %}
-                </ul>
-
-                <p class="section-title">B2B Slot Messages</p>
-                <ul>
-                    {% with b2b_messages=flight.get_b2b_messages %}
-                        {% for b2b_message in b2b_messages %}
-                            <li>{{ b2b_message.to_string }}</li>
-                        {% empty %}
-                            <li class="empty-message">No B2B messages</li>
-                        {% endfor %}
-                    {% endwith %}
-                </ul>
-            </div>
-        {% empty %}
-            <p class="empty-message">No flights available.</p>
-        {% endfor %}
-    </div>
+    {% include "components/legend.html" with legends=legends %}
+    {% include "components/statistics.html" with statistics=statistics %}
+    {% include "components/parsed-flights.html" with flights=flights %}
 </body>
 </html>

@@ -1,0 +1,24 @@
+<div class="container">
+    <h2>Parsed flights</h2>
+    {% for key, flight in flights.items %}
+        <div class="flight-card">
+            <div class="flight-card-header">
+                <h4>{{ key }}</h4>
+                {% if flight.detection_failure == True %}
+                    <span class="badge red">Failed to detect slots correctly</span>
+                {% endif %}
+                {% if flight.slots_are_identical == False %}
+                    <span class="badge red">Slots mismatch</span>
+                {% endif %}
+                {% if flight.average_detection_time_diff != None %}
+                    <span class="badge blue">Avg detection diff {{ flight.average_detection_time_diff|floatformat:2 }}</span>
+                {% endif %}
+            </div>
+
+            {% include "components/slot-item.html" with header="AFTN Slot Messages" empty_message="No AFTN messages" slots=flight.get_aftn_messages %}
+            {% include "components/slot-item.html" with header="B2B Slot Messages" empty_message="No B2B messages" slots=flight.get_b2b_messages %}
+        </div>
+    {% empty %}
+        <p class="empty-message">No flights available.</p>
+    {% endfor %}
+</div>

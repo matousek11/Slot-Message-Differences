@@ -1,0 +1,10 @@
+<div class="legend-item">
+    <div>
+        <span class="legend-color {{ legend.type|lower }}"></span> <strong>{{ legend.type }}</strong> - {{ legend.description }}
+        <ul>
+            {% for point in legend.details_list %}
+                <li>{{ point }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

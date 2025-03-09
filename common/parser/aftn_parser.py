@@ -5,34 +5,6 @@ from .parser import Parser
 from common.models.flight import Flight
 from common.models.slot_message import SlotMessage
 
-#At: 2024-08-17 00:00:05.008       INFO       Process: afp(15598036/26542530)       In: src/aftn_comm_mod.c/acm_recvGetOldestMsgFromDb()/1727       Subject: #ACM(OTHER)
-#AFP process calls ``aftndb'' and receive following AFTN message:
-#SEN001 170000
-#FF LKPREPWC
-#170000 EUCHZMFP
-#-TITLE ACK -MSGTYP IARR -FILTIM 162359 -ORIGINDT 2408170000
-#-BEGIN ADDR 
-#       -FAC LKPREPWC
-#-END ADDR 
-#-IFPLID AA62237582
-#-MSGTXT (ARR-TVS6EH-LGKO2115-LKPR0000)
-
-
-#At: 2024-08-17 00:00:11.009       INFO       Process: afp(15598036/26542530)    In: src/aftn_comm_mod.c/acm_recvGetOldestMsgFromDb()/1727       Subject: #ACM(OTHER)
-#AFP process calls ``aftndb'' and receive following AFTN message:
-#SEN002 170000
-#FF LKAAZFZX LKKVZTZX
-#170000 LKPRZPZX
-#(FPL-OKGUU02-VG
-#-ULAC/L-Y/C
-#-LKBE0615
-#-N0065VFR DCT LKHV DCT LKPS DCT BEKTO DCT
-#-LKCB0123 LKKV
-#-DOF/240817 OPR/PISTEK LKBE PER/A RMK/PIC HYBNER TEL +420608756293
-#)
-
-# wanted ipflid, message type, timestamp
-
 class AFTNParser(Parser):
     def __init__(self, relative_filepaths: List[str]):
         self.aftn_relative_paths = relative_filepaths
@@ -87,8 +59,9 @@ class AFTNParser(Parser):
         for line in message:
             if '-IFPLID' in line:
                 result[0] = line.split(' ')[1]
-            if 'Subject: ' in line:
-                start_index = line.find('Subject: ') + len('Subject: ')
+                result[0] = result[0].strip()
+            if '-TITLE ' in line:
+                start_index = line.find('-TITLE ') + len('-TITLE ')
                 result[1] = line[start_index:start_index + 3]
             if 'At: ' in line:
                 start_index = line.find('At: ') + len('At: ')

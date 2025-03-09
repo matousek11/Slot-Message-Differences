@@ -1,0 +1,10 @@
+<div class="container">
+    <h2>Statistics</h2>
+    <p>Number of parsing failures: <span>{{ statistics.number_of_parsing_failures }}</span></p>
+    <p>Total number of flights: <span>{{ statistics.number_of_flights }}</span></p>
+    <p>Average number of messages per flight. <b>AFTN:</b> <span>{{ statistics.average_num_of_messages.aftn_messages_number|floatformat:2 }}</span> <b>B2B:</b> <span>{{ statistics.average_num_of_messages.b2b_messages_number|floatformat:2 }}</span></p>
+    <p>Number of flights with identical slot messages (ACK slots ignored): <span>{{ statistics.number_of_flights_with_identical_slots }} ({{ statistics.number_of_flights_with_identical_slots_relative|floatformat:2 }}%)</span></p>
+    {% if statistics.average_detection_time_diff != None %}
+        <p>Average detection time compared from B2B to AFTN: {{ statistics.average_detection_time_diff|floatformat:2 }}s </p>
+    {% endif %}
+</div>

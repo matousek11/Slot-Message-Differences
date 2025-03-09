@@ -1,0 +1,18 @@
+<div class="container">
+    <h3>Slot Message Types</h3>
+    {% for legend in legends.slot_types %}
+        {% include "components/legend_item.html" with legend=legend %}
+    {% endfor %}
+    <details>
+        <summary>Slot message example</summary>
+        <div class="legend-details-container">
+            <p>{{ legends.slot_example.example_text }}</p>
+            <h5>B2B slot example</h5>
+            <pre><code>{{ legends.slot_example.b2b_example_slot }}</code></pre>
+            <p>Structure of B2B slot message:</p>
+            <pre><code># {time the message was sent} : {id of flight} : {slot message type} : {time assigned to take-off}</code></pre>
+            <h5>AFTN slot example:</h5>
+            <pre><code>{{ legends.slot_example.aftn_example_slot|safe }}</code></pre>
+        </div>
+    </details>
+</div>

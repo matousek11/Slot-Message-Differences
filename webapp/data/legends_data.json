@@ -1,0 +1,48 @@
+{
+    "slot_types": [
+        {
+            "type": "SAM",
+            "description": "Slot Allocation Message (Initial slot assignment)",
+            "details_list": [
+                "Sent by Eurocontrol network manager when slot has been allocated for flight",
+                "Contains Calculated Take-Off Time (CTOT), which is departure time assigned to reduce congestion"
+            ]
+        },
+        {
+            "type": "SRM",
+            "description": "Slot Revision Message (Updated slot information)",
+            "details_list": [
+                "Modification to existing SAM message",
+                "Sent when a new slot is assigned due to changes in traffic flow or improved capacity"
+            ]
+        },
+        {
+            "type": "SLC",
+            "description": "Slot Cancellation Message (Slot removed)",
+            "details_list": [
+                "Informs that previously allocated slot has been cancelled",
+                "Issued when flight is no longer subject to flow regulation or if the airline request cancellation"
+            ]
+        },
+        {
+            "type": "FLS",
+            "description": "Flight Suspension Message (Flight is suspended)",
+            "details_list": [
+                "Notifies that a flight is suspended from the slot management process",
+                "Happens when flight is delayed for an extended period of time or if there are major disruptions like airspace closures"
+            ]
+        },
+        {
+            "type": "DES",
+            "description": "De-Suspension Message (Flight reactivated)",
+            "details_list": [
+                "Opposite of FLS, it informs that previously suspended flight is back in the slot allocation process",
+                "Sent when conditions improve and flight can be managed again"
+            ]
+        }
+    ],
+    "slot_example": {
+        "b2b_example_slot": "# 2024-07-12 23:15:05 131 : AA63182728 : SAM : ctot = 2024-07-13 02:12",
+        "aftn_example_slot": "At: 2024-07-12 07:40:25.496       INFO       Process: afp(12198036/26542932)       In: src/comm_mod.c/acm_recvFromDb()/127       Subject: ACM(OTHER)\nAFP process calls ``aftndb'' and receive following AFTN message:\nSEN215 120740 <span>#message id and time message was sent</span>\nFF LKPRZPZF <span>#flight safety message with info about departure and arrival airport</span>\n170740 EUCHZMTA\n-TITLE SAM <span>#type of slot message</span>\n-ARCID BAE12944 <span>#flight number</span>\n-IFPLID AA62251724 <span>#flight id</span>\n-ADEP LIME\n-ADES LKPR\n-EOBD 240817 <span>#estimated block-off date</span>\n-EOBT 0940 <span>#estimated block-off time</span>\n-CTOT 1040 <span>#calculated take-off time</span>\n-REGUL LKTMA17\n-TTO -PTID APRAQ -TO 1135 -FL F160 <span>#take-off time, point id and initial flight level after take-off</span>\n-TAXITIME 0010 <span>#taxi time before flight can depart is 10 minutes</span>\n-REGCAUSE WE 81 <span>#cause of regulation</span>"
+    }
+}

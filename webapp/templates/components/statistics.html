@@ -1,10 +1,193 @@
-<div class="container">
-    <h2>Statistics</h2>
-    <p>Number of parsing failures: <span>{{ statistics.number_of_parsing_failures }}</span></p>
-    <p>Total number of flights: <span>{{ statistics.number_of_flights }}</span></p>
-    <p>Average number of messages per flight. <b>AFTN:</b> <span>{{ statistics.average_num_of_messages.aftn_messages_number|floatformat:2 }}</span> <b>B2B:</b> <span>{{ statistics.average_num_of_messages.b2b_messages_number|floatformat:2 }}</span></p>
-    <p>Number of flights with identical slot messages (ACK slots ignored): <span>{{ statistics.number_of_flights_with_identical_slots }} ({{ statistics.number_of_flights_with_identical_slots_relative|floatformat:2 }}%)</span></p>
+<style>
+    .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-between;
+        max-width: 940px;
+        margin: 10px auto;
+    }
+    .stat-box {
+        flex: 1;
+        min-width: 250px;
+        background: #f8f9fa;
+        min-height: 80px;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        perspective: 1000px;
+    }
+    .stat-box h3 {
+        margin-bottom: 0.5rem;
+    }
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .stats-container p {
+        margin: 2px;
+    }
+
+    .flipper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s ease-in-out;
+        margin-top: -16px;
+        margin-left: -16px;
+    }
+
+    .flip-container {
+        cursor: pointer;
+        min-height: 160px;
+    }
+
+    .flip-container.flipped .flipper {
+        transform: rotateY(180deg);
+    }
+
+    .front, .back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        padding: 1rem;
+    }
+
+    .front {
+        background: #f8f9fa;
+    }
+
+    .back {
+        background: #dff0ff;
+        color: #0056b3;
+        transform: rotateY(180deg);
+        margin-left: -32px;
+        border: solid 1px #0056b3;
+    }
+
+    .back h3 {
+        color: #0056b3 !important;
+    }
+
+    progress {
+        width: 100%;
+        height: 10px;
+        border-radius: 5px;
+        appearance: none;
+    }
+
+    progress::-webkit-progress-bar {
+        background-color: #ddd;
+        border-radius: 5px;
+    }
+
+    progress::-webkit-progress-value {
+        background-color: #007bff;
+        border-radius: 5px;
+    }
+
+    progress::-moz-progress-bar {
+        background-color: #007bff;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="stats-container">
+    <div class="stat-box flip-container" onclick="this.classList.toggle('flipped')">
+        <div class="flipper">
+            <div class="front">
+                <h3>Total Flights</h3>
+                <div class="stat-value">{{ statistics.number_of_flights }}</div>
+            </div>
+
+            <div class="back">
+                <h3>Total Flights</h3>
+                <p>Total number of parsed flights</p>
+            </div>
+        </div>
+    </div>
+    <div class="stat-box flip-container" onclick="this.classList.toggle('flipped')">
+        <div class="flipper">
+            <div class="front">
+                <h3>Duplicate slots</h3>
+                <div class="stat-value">{{ statistics.duplicate_slot_detection_number }}</div>
+            </div>
+
+            <div class="back">
+                <h3>Duplicate slots</h3>
+                <p>Number of slots that have been detected more than once. ACK slots are not counted.</p>
+            </div>
+        </div>
+    </div>
+    <div class="stat-box flip-container" onclick="this.classList.toggle('flipped')">
+        <div class="flipper">
+            <div class="front">
+                <h3>Slots not detected</h3>
+                <div class="stat-value">{{ statistics.not_detected_slots_number }}</div>
+            </div>
+
+            <div class="back">
+                <h3>Slots not detected</h3>
+                <p>Slots which weren't detected by change of B2B parameters but should have been detected. ACK slots are not counted.</p>
+            </div>
+        </div>
+    </div>
+    <div class="stat-box flip-container" onclick="this.classList.toggle('flipped')">
+        <div class="flipper">
+            <div class="front">
+                <h3>Flights with correct slots</h3>
+                <div class="stat-value">{{ statistics.number_of_flights_with_identical_slots }}</div>
+                <p>({{ statistics.number_of_flights_with_identical_slots_relative|floatformat:2 }}%)</p>
+            </div>
+
+            <div class="back">
+                <h3>Flights with correct slots</h3>
+                <p>This represents the number of flights which have all slots that should have been detected. ACK slots are not counted.</p>
+            </div>
+        </div>
+    </div>
     {% if statistics.average_detection_time_diff != None %}
-        <p>Average detection time compared from B2B to AFTN: {{ statistics.average_detection_time_diff|floatformat:2 }}s </p>
+    <div class="stat-box flip-container" onclick="this.classList.toggle('flipped')">
+        <div class="flipper">
+            <div class="front">
+                <h3>Avg. Detection Time</h3>
+                <p>(compared to AFTN)</p>
+                <div class="stat-value">{{ statistics.average_detection_time_diff|floatformat:2 }}s</div>
+            </div>
+
+            <div class="back">
+                <h3>Avg. Detection Time</h3>
+                <p>How fast compared relatively from B2B to AFTN timestamp was same slot message detected. Minus value means that B2B detection was faster.</p>
+            </div>
+        </div>
+    </div>
     {% endif %}
+    <div class="stat-box flip-container" onclick="this.classList.toggle('flipped')">
+        <div class="flipper">
+            <div class="front">
+                <h3>Average Slots per Flight</h3>
+                <p>AFTN: {{ statistics.average_num_of_messages.aftn_messages_number|floatformat:2 }}</p>
+                <p>B2B: {{ statistics.average_num_of_messages.b2b_messages_number|floatformat:2 }}</p>
+            </div>
+
+            <div class="back">
+                <h3>Average Slots per Flight</h3>
+                <p>Average number of slot messages per flight based on network.</p>
+            </div>
+        </div>
+    </div>
+    <div class="stat-box">
+        <h3>Parsing Failures</h3>
+        <div class="stat-value">{{ statistics.number_of_parsing_failures }}</div>
+    </div>
 </div>
